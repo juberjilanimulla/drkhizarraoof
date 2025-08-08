@@ -20,7 +20,7 @@ async function signinHandler(req, res) {
     const email = req.body.email;
     const password = req.body.password;
     const users = await usermodel.findOne({ email });
-
+    console.log("users",users)
     if (!users) {
       return errorResponse(res, 404, "email not found");
     }
@@ -31,7 +31,7 @@ async function signinHandler(req, res) {
     }
 
     const userid = users._id.toString();
-
+    console.log("userid",userid)
     const { encoded_token, public_token } = generateAccessToken(
       userid,
       users.email,
