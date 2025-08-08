@@ -4,6 +4,7 @@ const blogSchema = new Schema(
   {
     title: {
       type: String,
+      default: "",
     },
     category: {
       type: String,
@@ -11,6 +12,7 @@ const blogSchema = new Schema(
     },
     metatitle: {
       type: String,
+      default: "",
     },
     metadescription: {
       type: String,
