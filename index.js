@@ -35,7 +35,14 @@ app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 app.use(
   cors({
-    origin: ["https://drkhizarraoof.com", "https://drkhizarraoof.vercel.app"],
+    origin: [
+      "https://drkhizarraoof.com",
+      "https://drkhizarraoof.vercel.app",
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://localhost:5175",
+    ],
     credentials: true,
   })
 );
