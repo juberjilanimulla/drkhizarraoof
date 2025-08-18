@@ -29,7 +29,7 @@ const blogSchema = new Schema(
     },
     author: {
       type: String,
-      default: "Dr. Khizer Junaidy",
+      default: "Dr. Khizar Raoof",
     },
     published: {
       type: Boolean,
