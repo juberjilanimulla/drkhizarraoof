@@ -106,6 +106,7 @@ async function createblogsHandler(req, res) {
     ) {
       return errorResponse(res, 400, "some params are missing");
     }
+
     const parmas = {
       title,
       category,

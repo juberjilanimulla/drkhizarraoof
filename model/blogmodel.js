@@ -24,9 +24,16 @@ const blogSchema = new Schema(
       type: String,
       default: "",
     },
-    content: {
-      type: String,
-    },
+    content: [
+      {
+        title: {
+          type: String,
+        },
+        description: {
+          type: String,
+        },
+      },
+    ],
     author: {
       type: String,
       default: "Dr. Khizar Raoof",
