@@ -6,6 +6,7 @@ import usersubcribeRouter from "./usersubcribeRouter.js";
 import userreviewRouter from "./userreviewRouter.js";
 import usercommentRouter from "./usercommentRouter.js";
 import uservideoRouter from "./uservideoRouter.js";
+import userappointmentRouter from "./userappointmentRouter.js";
 
 const userRouter = Router();
 
@@ -16,5 +17,6 @@ userRouter.use("/subcribe", usersubcribeRouter);
 userRouter.use("/review", userreviewRouter);
 userRouter.use("/comment", usercommentRouter);
 userRouter.use("/video", uservideoRouter);
+userRouter.use("/appointment", userappointmentRouter);
 
 export default userRouter;
