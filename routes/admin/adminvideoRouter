@@ -10,6 +10,7 @@ adminvideoRouter.post("/getall", getallvideoHandler);
 adminvideoRouter.post("/create", createvideoHandler);
 adminvideoRouter.put("/update", updatevideoHandler);
 adminvideoRouter.delete("/delete", deletevideoHandler);
+adminvideoRouter.post("/published", publihsedvideoHandler);
 
 export default adminvideoRouter;
 
@@ -75,7 +76,7 @@ async function createvideoHandler(req, res) {
       return errorResponse(res, 400, "some params are missing");
     }
     const params = { title, description, src };
-    const video = await videomodel(params);
+    const video = await videomodel.create(params);
 
     successResponse(res, "success", video);
   } catch (error) {
@@ -121,6 +122,48 @@ async function deletevideoHandler(req, res) {
     }
     const video = await videomodel.findByIdAndDelete({ _id: _id });
     successResponse(res, "successfully deleted");
+  } catch (error) {
+    console.log("error", error);
+    errorResponse(res, 500, "internal server error");
+  }
+}
+
+async function publihsedvideoHandler(req, res) {
+  try {
+    const { published, videoid } = req.body;
+
+    if (!videoid) {
+      return errorResponse(res, 400, "video ID is missing in URL params");
+    }
+
+    const existingvideo = await videomodel.findById({ _id: videoid });
+    if (!existingvideo) {
+      return errorResponse(res, 404, "video not found");
+    }
+
+    if (typeof published !== "boolean") {
+      return errorResponse(
+        res,
+        400,
+        "Published must be a boolean (true/false)"
+      );
+    }
+
+    const updatedVideo = await videomodel.findByIdAndUpdate(
+      videoid,
+      { published },
+      { new: true }
+    );
+
+    if (!updatedVideo) {
+      return errorResponse(res, 404, "video not found");
+    }
+
+    return successResponse(
+      res,
+      "Video approval status updated successfully",
+      updatedBlog
+    );
   } catch (error) {
     console.log("error", error);
     errorResponse(res, 500, "internal server error");

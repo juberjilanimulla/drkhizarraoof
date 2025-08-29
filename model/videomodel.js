@@ -5,6 +5,10 @@ const videoSchema = new Schema(
     title: String,
     description: String,
     src: String,
+    published: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true, versionKey: false }
 );
