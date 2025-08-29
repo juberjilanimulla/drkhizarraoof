@@ -10,9 +10,12 @@ const appointmentSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "doctor",
     },
-    specspecialization: { type: String },
+    specialization: { type: String },
     date: { type: Date },
-    slot: { type: String }, // e.g., "10:00 AM - 10:30 AM"
+    slotid: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "slotbooking",
+    }, // e.g., "10:00 AM - 10:30 AM"
     status: {
       type: String,
       enum: ["pending", "completed", "cancelled"],
