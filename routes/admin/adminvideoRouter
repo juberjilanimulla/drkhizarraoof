@@ -162,7 +162,7 @@ async function publihsedvideoHandler(req, res) {
     return successResponse(
       res,
       "Video approval status updated successfully",
-      updatedBlog
+      updatedVideo
     );
   } catch (error) {
     console.log("error", error);
