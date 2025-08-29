@@ -7,7 +7,7 @@ import {
 
 const uservideoRouter = Router();
 
-uservideoRouter.get("/getvideos", getvideosHandler);
+uservideoRouter.get("/", getvideosHandler);
 
 export default uservideoRouter;
 
