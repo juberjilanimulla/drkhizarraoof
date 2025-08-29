@@ -40,3 +40,11 @@ appointmentSchema.pre("save", function (next) {
   next();
 });
 
+appointmentSchema.pre("findOneAndUpdate", function (next) {
+  const currentTime = currentLocalTimePlusOffset();
+  this.set({ updatedAt: currentTime });
+  next();
+});
+
+const appointmentmodel = model("appointment", appointmentSchema);
+export default appointmentmodel;
