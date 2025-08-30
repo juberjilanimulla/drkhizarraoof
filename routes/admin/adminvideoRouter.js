@@ -71,11 +71,11 @@ async function getallvideoHandler(req, res) {
 
 async function createvideoHandler(req, res) {
   try {
-    const { title, description, src } = req.body;
-    if (!title || !description || !src) {
+    const { title, src } = req.body;
+    if (!title || !src) {
       return errorResponse(res, 400, "some params are missing");
     }
-    const params = { title, description, src };
+    const params = { title, src };
     const video = await videomodel.create(params);
 
     successResponse(res, "success", video);
@@ -98,7 +98,7 @@ async function updatevideoHandler(req, res) {
     }
 
     const options = { new: true };
-    if (!updatedData.title || !updatedData.description || !updatedData.src) {
+    if (!updatedData.title || !updatedData.src) {
       errorResponse(res, 404, "Some params are missing");
       return;
     }
