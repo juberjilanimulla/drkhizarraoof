@@ -21,6 +21,9 @@ const appointmentSchema = new Schema(
       enum: ["pending", "completed", "cancelled"],
       default: "pending",
     },
+    timeslot: {
+      type: String,
+    },
     paymentStatus: {
       type: String,
       enum: ["unpaid", "paid"],

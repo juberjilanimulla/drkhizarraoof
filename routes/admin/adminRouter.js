@@ -5,7 +5,7 @@ import admincontactRouter from "./admincontactRouter.js";
 import adminsubcribeRouter from "./adminsubcribeRouter.js";
 import adminreviewRouter from "./adminreviewRouter.js";
 import admincommentRouter from "./admicommentRouter.js";
-import adminvideoRouter from "./adminvideoRouter";
+import adminvideoRouter from "./adminvideoRouter.js";
 
 const adminRouter = Router();
 
