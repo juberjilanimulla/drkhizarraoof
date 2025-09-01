@@ -104,27 +104,49 @@ async function updateslotbookingHandler(req, res) {
 
     const existingslotbooking = await slotbookingmodel.findById(_id);
     if (!existingslotbooking) {
-      return errorResponse(res, 404, "slotbooking is not exist");
+      return errorResponse(res, 404, "slotbooking does not exist");
     }
 
-    const options = { new: true };
+    const { doctorid, date, starttime, endtime, slottype, isbooked } =
+      updatedData;
+
     if (
-      !updatedData.dotorid ||
-      !updatedData.date ||
-      !updatedData.starttime ||
-      !updatedData.endtime ||
-      !updatedData.slottype ||
-      !updatedData.isbooked
+      !doctorid ||
+      !date ||
+      !starttime ||
+      !endtime ||
+      !slottype ||
+      isbooked === undefined
     ) {
-      errorResponse(res, 404, "Some params are missing");
-      return;
+      return errorResponse(res, 400, "Some params are missing");
     }
+
+    //  Check if another slot exists with same doctor/date/time
+    const duplicateSlot = await slotbookingmodel.findOne({
+      doctorid,
+      date,
+      starttime,
+      endtime,
+      _id: { $ne: _id }, // exclude current slot
+    });
+
+    if (duplicateSlot) {
+      return errorResponse(
+        res,
+        400,
+        "This slot is already booked for the doctor"
+      );
+    }
+
+    // Update slot booking
+    const options = { new: true };
     const slotbooking = await slotbookingmodel.findByIdAndUpdate(
       _id,
       updatedData,
       options
     );
-    successResponse(res, "successfully updated", slotbooking);
+
+    successResponse(res, "Successfully updated", slotbooking);
   } catch (error) {
     console.log("error", error);
     errorResponse(res, 500, "internal server error");
@@ -135,14 +157,26 @@ async function deleteslotbookingHandler(req, res) {
   try {
     const { _id } = req.body;
     if (!_id) {
-      return errorResponse(res, 400, "some params are missing");
+      return errorResponse(res, 400, "slot booking ID (_id) is required");
     }
-    const checkexist = await slotbookingmodel.findById(_id);
-    if (!checkexist) {
-      return errorResponse(res, 404, "slotbooking not found in database ");
+
+    const slot = await slotbookingmodel.findById(_id);
+    if (!slot) {
+      return errorResponse(res, 404, "Slot booking not found in database");
     }
-    const slotbooking = await slotbookingmodel.findByIdAndDelete({ _id: _id });
-    successResponse(res, "successfully deleted");
+
+    // Instead of deleting → mark as available
+    if (slot.isbooked === false) {
+      return successResponse(res, "Slot is already available", slot);
+    }
+
+    const updatedSlot = await slotbookingmodel.findByIdAndUpdate(
+      _id,
+      { isbooked: false },
+      { new: true }
+    );
+
+    successResponse(res, "Slot is now available for booking", updatedSlot);
   } catch (error) {
     console.log("error", error);
     errorResponse(res, 500, "internal server error");
