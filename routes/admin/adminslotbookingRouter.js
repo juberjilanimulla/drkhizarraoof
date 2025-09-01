@@ -94,7 +94,7 @@ async function updateslotbookingHandler(req, res) {
 
     const options = { new: true };
     if (
-      !updatedData.dodtorid ||
+      !updatedData.doctorid ||
       !updatedData.date ||
       !updatedData.starttime ||
       !updatedData.endtime ||

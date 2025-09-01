@@ -40,7 +40,6 @@ async function createappointmentHandler(req, res) {
     // Check slot availability in slotbookingmodel
     const slot = await slotbookingmodel.findOne({
       _id: slotid,
-      doctorid,
       date,
       isbooked: false,
     });
