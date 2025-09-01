@@ -7,7 +7,7 @@ import usercommentRouter from "./usercommentRouter.js";
 import uservideoRouter from "./uservideoRouter.js";
 import userappointmentRouter from "./userappointmentRouter.js";
 import userslotbookingRouter from "./userslotbookingRouter.js";
-import userpaymentRouter from "./userpaymentRouter.js";
+// import userpaymentRouter from "./userpaymentRouter.js";
 
 const userRouter = Router();
 
@@ -19,6 +19,6 @@ userRouter.use("/comment", usercommentRouter);
 userRouter.use("/video", uservideoRouter);
 userRouter.use("/appointment", userappointmentRouter);
 userRouter.use("/slotbooking", userslotbookingRouter);
-userRouter.use("/payment", userpaymentRouter);
+// userRouter.use("/payment", userpaymentRouter);
 
 export default userRouter;
