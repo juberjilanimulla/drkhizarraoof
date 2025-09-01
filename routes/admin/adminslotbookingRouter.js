@@ -71,6 +71,21 @@ async function createslotbookingHandler(req, res) {
     if (!doctorid || !date || !starttime || !endtime || !slottype) {
       return errorResponse(res, 400, "some params are missing");
     }
+    const existingSlot = await slotbookingmodel.findOne({
+      doctorid,
+      date,
+      starttime,
+      endtime,
+    });
+
+    if (existingSlot) {
+      return errorResponse(
+        res,
+        400,
+        "This slot is already booked for the doctor"
+      );
+    }
+
     const params = { doctorid, date, starttime, endtime, slottype };
     const slotbooking = await slotbookingmodel.create(params);
     successResponse(res, "success", slotbooking);
@@ -94,7 +109,7 @@ async function updateslotbookingHandler(req, res) {
 
     const options = { new: true };
     if (
-      !updatedData.doctorid ||
+      !updatedData.dotorid ||
       !updatedData.date ||
       !updatedData.starttime ||
       !updatedData.endtime ||
