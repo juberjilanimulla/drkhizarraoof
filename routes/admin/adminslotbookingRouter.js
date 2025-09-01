@@ -4,6 +4,7 @@ import {
   successResponse,
   errorResponse,
 } from "../../helpers/serverResponse.js";
+import appointmentmodel from "../../model/appointmentmodel.js";
 
 const adminslotbookingRouter = Router();
 
@@ -25,7 +26,11 @@ async function getslotbookingHandler(req, res) {
     // Apply search
     if (search.trim()) {
       const searchRegex = new RegExp(search.trim(), "i");
-      query.$or = [];
+      query.$or = [
+        { starttime: searchRegex },
+        { endtime: searchRegex },
+        { slottype: searchRegex },
+      ];
     }
 
     // Apply filters
@@ -45,7 +50,7 @@ async function getslotbookingHandler(req, res) {
           }, {})
         : { createdAt: -1 };
 
-    // Fetch paginated blogs
+    // Fetch paginated slotbooking
     const slotbooking = await slotbookingmodel
       .find(query)
       .sort(sortBy)
@@ -79,15 +84,12 @@ async function createslotbookingHandler(req, res) {
     });
 
     if (existingSlot) {
-      return errorResponse(
-        res,
-        400,
-        "This slot is already booked for the doctor"
-      );
+      return errorResponse(res, 400, "This slot already exists for the doctor");
     }
 
     const params = { doctorid, date, starttime, endtime, slottype };
     const slotbooking = await slotbookingmodel.create(params);
+
     successResponse(res, "success", slotbooking);
   } catch (error) {
     console.log("error", error);
@@ -107,8 +109,7 @@ async function updateslotbookingHandler(req, res) {
       return errorResponse(res, 404, "slotbooking does not exist");
     }
 
-    const { doctorid, date, starttime, endtime, slottype, isbooked } =
-      updatedData;
+    const { doctorid, date, starttime, endtime, slottype } = updatedData;
 
     if (!doctorid || !date || !starttime || !endtime || !slottype) {
       return errorResponse(res, 400, "Some params are missing");
@@ -133,12 +134,17 @@ async function updateslotbookingHandler(req, res) {
 
     // Update slot booking
     const options = { new: true };
+
     const slotbooking = await slotbookingmodel.findByIdAndUpdate(
       _id,
       updatedData,
       options
     );
 
+    await appointmentmodel.updateMany(
+      { doctorid, date, slotid: _id },
+      { status: "cancelled" }
+    );
     successResponse(res, "Successfully updated", slotbooking);
   } catch (error) {
     console.log("error", error);
@@ -155,21 +161,16 @@ async function deleteslotbookingHandler(req, res) {
 
     const slot = await slotbookingmodel.findById(_id);
     if (!slot) {
-      return errorResponse(res, 404, "Slot booking not found in database");
+      return errorResponse(res, 404, "Slot not found in database");
     }
 
-    // Instead of deleting → mark as available
-    if (slot.isbooked === false) {
-      return successResponse(res, "Slot is already available", slot);
-    }
-
-    const updatedSlot = await slotbookingmodel.findByIdAndUpdate(
-      _id,
-      { isbooked: false },
-      { new: true }
+    await appointmentmodel.updateMany(
+      { doctorid: slot.doctorid, date: slot.date, slotid: _id },
+      { status: "cancelled" }
     );
+    await slotbookingmodel.findByIdAndDelete(_id);
 
-    successResponse(res, "Slot is now available for booking", updatedSlot);
+    successResponse(res, "Slot deleted and related appointments cancelled");
   } catch (error) {
     console.log("error", error);
     errorResponse(res, 500, "internal server error");

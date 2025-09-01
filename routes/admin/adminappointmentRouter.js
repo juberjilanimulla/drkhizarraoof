@@ -27,7 +27,15 @@ async function getallappointmentHandler(req, res) {
         }
       });
     }
-
+    
+    if (filterBy.startDate && filterBy.endDate) {
+      query.$and.push({
+        date: {
+          $gte: new Date(filterBy.startDate),
+          $lte: new Date(filterBy.endDate),
+        },
+      });
+    }
     // Apply search
     if (search.trim()) {
       const searchRegex = new RegExp("\\b" + search.trim(), "i");
@@ -55,6 +63,8 @@ async function getallappointmentHandler(req, res) {
     // Aggregation pipeline with pagination
     const appointment = await appointmentmodel
       .find(query)
+      .populate("doctorid", "name specialization") // doctor info
+      .populate("slotid", "starttime endtime slottype") // slot info
       .sort(sortBy)
       .skip(skip)
       .limit(limit);

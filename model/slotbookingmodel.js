@@ -14,10 +14,6 @@ const slotbookingSchema = new Schema(
       enum: ["online", "offline"],
       default: "",
     },
-    isbooked: {
-      type: Boolean,
-      default: false,
-    },
   },
   { timestamps: true, versionKey: false }
 );
