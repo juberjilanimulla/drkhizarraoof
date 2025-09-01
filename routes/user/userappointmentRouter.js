@@ -9,6 +9,7 @@ import slotbookingmodel from "../../model/slotbookingmodel.js";
 const userappointmentRouter = Router();
 
 userappointmentRouter.post("/create", createappointmentHandler);
+userappointmentRouter.get("/:patientmobile", getmyappointmentsHandler);
 
 export default userappointmentRouter;
 
@@ -21,53 +22,50 @@ async function createappointmentHandler(req, res) {
       doctorid,
       date,
       slotid,
-      timeslot,
+      starttime,
+      endtime,
       slottype,
+      price,
     } = req.body;
 
     if (
       !patientname ||
-      !patientemail ||
       !patientmobile ||
       !doctorid ||
       !date ||
       !slotid ||
-      !timeslot ||
+      !starttime ||
+      !endtime ||
       !slottype
     ) {
-      return errorResponse(res, 400, "some params are missing");
+      return errorResponse(res, 400, "Some params are missing");
     }
-    // Check slot availability in slotbookingmodel
+
+    // Check if slot exists
     const slot = await slotbookingmodel.findOne({
       _id: slotid,
+      doctorid,
       date,
-      isbooked: false,
     });
 
     if (!slot) {
-      return errorResponse(res, 404, "Slot not available or already booked");
+      return errorResponse(res, 404, "Slot not found for doctor");
     }
 
-    // Check slot type match
-    if (slot.slottype !== slottype) {
-      return errorResponse(
-        res,
-        400,
-        "Slot type mismatch with doctor availability"
-      );
-    }
-
-    // Check duplicate booking in appointment table
+    // Check if appointment already exists for this slot
     const alreadyBooked = await appointmentmodel.findOne({
       doctorid,
       date,
       slotid,
-      timeslot,
+      starttime,
+      status: { $in: ["pending", "confirmed"] },
     });
 
     if (alreadyBooked) {
       return errorResponse(res, 400, "This slot is already booked");
     }
+
+    // Create appointment with pending + unpaid
     const appointment = await appointmentmodel.create({
       patientname,
       patientemail,
@@ -75,18 +73,50 @@ async function createappointmentHandler(req, res) {
       doctorid,
       date,
       slotid,
-      timeslot,
+      starttime,
+      endtime,
       slottype,
+      price: price || 0,
       status: "pending",
       paymentStatus: "unpaid",
     });
 
-    // ✅ Mark slot as booked
-    await slotbookingmodel.findByIdAndUpdate(slotid, { isbooked: true });
+    // Auto-cancel after 7 minutes if still unpaid
+    setTimeout(async () => {
+      const appt = await appointmentmodel.findById(appointment._id);
+      if (appt && appt.paymentStatus === "unpaid") {
+        await appointmentmodel.findByIdAndUpdate(appointment._id, {
+          status: "cancelled",
+        });
+        console.log(
+          `Appointment ${appointment._id} auto-cancelled due to no payment`
+        );
+      }
+    }, 7 * 60 * 1000);
 
-    successResponse(res, "Appointment booked successfully", appointment);
+    successResponse(res, "Appointment created", appointment);
   } catch (error) {
     console.log("error", error);
     errorResponse(res, 500, "internal server error");
+  }
+}
+
+async function getmyappointmentsHandler(req, res) {
+  try {
+    const { patientmobile } = req.params;
+
+    if (!patientmobile) {
+      return errorResponse(res, 400, "Patient mobile is required");
+    }
+
+    const appointments = await appointmentmodel
+      .find({ patientmobile })
+      .populate("doctorid", "name specialization")
+      .sort({ date: 1, starttime: 1 });
+
+    successResponse(res, "my appointments fetched", appointments);
+  } catch (error) {
+    console.error(error);
+    errorResponse(res, 500, "Internal server error");
   }
 }
