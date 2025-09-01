@@ -8,7 +8,9 @@ import {
 const admindoctorRouter = Router();
 
 admindoctorRouter.post("/", getalldoctorHandler);
-
+admindoctorRouter.post("/create", createdoctorHandler);
+admindoctorRouter.put("/update", updatedoctorHandler);
+admindoctorRouter.delete("/delete", deletedoctorHandler);
 export default admindoctorRouter;
 
 async function getalldoctorHandler(req, res) {
@@ -74,5 +76,72 @@ async function getalldoctorHandler(req, res) {
   } catch (error) {
     console.log("error", error);
     errorResponse(res, 500, "internal server error");
+  }
+}
+
+async function createdoctorHandler(req, res) {
+  try {
+    const { firstname, lastname, email, mobile } = req.body;
+    if (!firstname || !lastname || !email || !mobile) {
+      return errorResponse(res, 400, "some params are missing");
+    }
+    const params = { firstname, lastname, email, mobile };
+    const doctor = await doctormodel.create(params);
+    successResponse(res, "success", doctor);
+  } catch (error) {
+    console.log("error", error);
+    errorResponse(res, 500, "internal server error");
+  }
+}
+
+async function updatedoctorHandler(req, res) {
+  try {
+    const { _id, ...updatedData } = req.body;
+    if (!_id) {
+      return errorResponse(res, 400, "doctor ID (_id) is required");
+    }
+
+    const existingdoctor = await doctormodel.findById(_id);
+    if (!existingdoctor) {
+      return errorResponse(res, 404, "doctor is not exist");
+    }
+
+    const options = { new: true };
+    if (
+      !updatedData.firstname ||
+      !updatedData.lastname ||
+      !updatedData.email ||
+      !updatedData.mobile
+    ) {
+      errorResponse(res, 404, "Some params are missing");
+      return;
+    }
+    const doctor = await doctormodel.findByIdAndUpdate(
+      _id,
+      updatedData,
+      options
+    );
+    successResponse(res, "successfully updated", doctor);
+  } catch (error) {
+    console.log("error", error);
+    errorResponse(res, 500, "internal server error");
+  }
+}
+
+async function deletedoctorHandler(req, res) {
+  try {
+    const { _id } = req.body;
+    if (!_id) {
+      return errorResponse(res, 400, "some params are missing");
+    }
+    const checkexist = await doctormodel.findById(_id);
+    if (!checkexist) {
+      return errorResponse(res, 404, "doctor not found in database ");
+    }
+    const doctor = await doctormodel.findByIdAndDelete({ _id: _id });
+    successResponse(res, "successfully deleted");
+  } catch (error) {
+    console.log("error", error);
+    errorResponse(res, 500, "internal server");
   }
 }
