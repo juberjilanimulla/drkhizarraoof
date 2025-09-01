@@ -27,7 +27,6 @@ async function getallvideoHandler(req, res) {
       const searchRegex = new RegExp(search.trim(), "i");
       query.$or = [
         { title: { $regex: searchRegex } },
-        { description: { $regex: searchRegex } },
         { src: { $regex: searchRegex } },
       ];
     }
