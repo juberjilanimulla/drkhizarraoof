@@ -110,14 +110,7 @@ async function updateslotbookingHandler(req, res) {
     const { doctorid, date, starttime, endtime, slottype, isbooked } =
       updatedData;
 
-    if (
-      !doctorid ||
-      !date ||
-      !starttime ||
-      !endtime ||
-      !slottype ||
-      isbooked === undefined
-    ) {
+    if (!doctorid || !date || !starttime || !endtime || !slottype) {
       return errorResponse(res, 400, "Some params are missing");
     }
 
