@@ -2,8 +2,7 @@ import { Schema, model } from "mongoose";
 
 const doctorSchema = new Schema(
   {
-    firstname: String,
-    lastname: String,
+    name: String,
     mobile: String,
     email: String,
     address: String,

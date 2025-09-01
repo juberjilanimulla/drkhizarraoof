@@ -39,8 +39,7 @@ async function getalldoctorHandler(req, res) {
       // const searchRegex = new RegExp(search.trim(), "i");
       const searchRegex = new RegExp("\\b" + search.trim(), "i");
       const searchConditions = [
-        { firstname: { $regex: searchRegex } },
-        { lastname: { $regex: searchRegex } },
+        { name: { $regex: searchRegex } },
         { email: { $regex: searchRegex } },
         { mobile: { $regex: searchRegex } },
       ];
@@ -81,11 +80,11 @@ async function getalldoctorHandler(req, res) {
 
 async function createdoctorHandler(req, res) {
   try {
-    const { firstname, lastname, email, mobile, specialization } = req.body;
-    if (!firstname || !lastname || !email || !mobile) {
+    const { name, email, mobile, specialization } = req.body;
+    if (!name || !email || !mobile) {
       return errorResponse(res, 400, "some params are missing");
     }
-    const params = { firstname, lastname, email, mobile, specialization };
+    const params = { name, email, mobile, specialization };
     const doctor = await doctormodel.create(params);
     successResponse(res, "success", doctor);
   } catch (error) {
@@ -108,8 +107,7 @@ async function updatedoctorHandler(req, res) {
 
     const options = { new: true };
     if (
-      !updatedData.firstname ||
-      !updatedData.lastname ||
+      !updatedData.name ||
       !updatedData.email ||
       !updatedData.mobile ||
       !updatedData.specialization
