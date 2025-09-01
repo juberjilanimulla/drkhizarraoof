@@ -81,11 +81,11 @@ async function getalldoctorHandler(req, res) {
 
 async function createdoctorHandler(req, res) {
   try {
-    const { firstname, lastname, email, mobile } = req.body;
+    const { firstname, lastname, email, mobile, specialization } = req.body;
     if (!firstname || !lastname || !email || !mobile) {
       return errorResponse(res, 400, "some params are missing");
     }
-    const params = { firstname, lastname, email, mobile };
+    const params = { firstname, lastname, email, mobile, specialization };
     const doctor = await doctormodel.create(params);
     successResponse(res, "success", doctor);
   } catch (error) {
@@ -111,7 +111,8 @@ async function updatedoctorHandler(req, res) {
       !updatedData.firstname ||
       !updatedData.lastname ||
       !updatedData.email ||
-      !updatedData.mobile
+      !updatedData.mobile ||
+      !updatedData.specialization
     ) {
       errorResponse(res, 404, "Some params are missing");
       return;

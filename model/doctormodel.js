@@ -7,6 +7,10 @@ const doctorSchema = new Schema(
     mobile: String,
     email: String,
     address: String,
+    specialization: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true, versionKey: false }
 );
