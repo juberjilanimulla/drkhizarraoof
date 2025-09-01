@@ -6,6 +6,7 @@ import adminsubcribeRouter from "./adminsubcribeRouter.js";
 import adminreviewRouter from "./adminreviewRouter.js";
 import admincommentRouter from "./admicommentRouter.js";
 import adminvideoRouter from "./adminvideoRouter.js";
+import adminslotbookingRouter from "./adminslotbookingRouter.js";
 
 const adminRouter = Router();
 
@@ -16,5 +17,6 @@ adminRouter.use("/subcribe", adminsubcribeRouter);
 adminRouter.use("/review", adminreviewRouter);
 adminRouter.use("/comment", admincommentRouter);
 adminRouter.use("/video", adminvideoRouter);
+adminRouter.use("/slotbooking", adminslotbookingRouter);
 
 export default adminRouter;

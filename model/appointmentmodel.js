@@ -24,6 +24,11 @@ const appointmentSchema = new Schema(
     timeslot: {
       type: String,
     },
+    slottype: {
+      type: String,
+      enum: ["offline", "online"],
+      default: "",
+    },
     paymentStatus: {
       type: String,
       enum: ["unpaid", "paid"],

@@ -19,8 +19,9 @@ async function createappointmentHandler(req, res) {
       patientmobile,
       doctorid,
       date,
-      starttime,
+      slotid,
       endtime,
+      timeslot,
       slottype,
     } = req.body;
 
@@ -30,8 +31,8 @@ async function createappointmentHandler(req, res) {
       !patientmobile ||
       !doctorid ||
       !date ||
-      !starttime ||
-      !endtime ||
+      !slotid ||
+      !timeslot ||
       !slottype
     ) {
       return errorResponse(res, 400, "some params are missing");
@@ -43,8 +44,8 @@ async function createappointmentHandler(req, res) {
       patientmobile,
       doctorid,
       date,
-      starttime,
-      endtime,
+      slotid,
+      timeslot,
       slottype,
     };
 
