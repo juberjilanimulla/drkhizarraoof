@@ -4,6 +4,7 @@ import {
   errorResponse,
 } from "../../helpers/serverResponse.js";
 import appointmentmodel from "../../model/appointmentmodel.js";
+import slotbookingmodel from "../../model/slotbookingmodel.js";
 
 const userappointmentRouter = Router();
 
@@ -36,8 +37,39 @@ async function createappointmentHandler(req, res) {
     ) {
       return errorResponse(res, 400, "some params are missing");
     }
+    // Check slot availability in slotbookingmodel
+    const slot = await slotbookingmodel.findOne({
+      _id: slotid,
+      doctorid,
+      date,
+      isbooked: false,
+    });
 
-    const params = {
+    if (!slot) {
+      return errorResponse(res, 404, "Slot not available or already booked");
+    }
+
+    // Check slot type match
+    if (slot.slottype !== slottype) {
+      return errorResponse(
+        res,
+        400,
+        "Slot type mismatch with doctor availability"
+      );
+    }
+
+    // Check duplicate booking in appointment table
+    const alreadyBooked = await appointmentmodel.findOne({
+      doctorid,
+      date,
+      slotid,
+      timeslot,
+    });
+
+    if (alreadyBooked) {
+      return errorResponse(res, 400, "This slot is already booked");
+    }
+    const appointment = await appointmentmodel.create({
       patientname,
       patientemail,
       patientmobile,
@@ -46,11 +78,14 @@ async function createappointmentHandler(req, res) {
       slotid,
       timeslot,
       slottype,
-    };
+      status: "pending",
+      paymentStatus: "unpaid",
+    });
 
-    const appointment = await appointmentmodel.create(params);
-    // await appointmentmodel.populate(p);
-    successResponse(res, "success", appointment);
+    // ✅ Mark slot as booked
+    await slotbookingmodel.findByIdAndUpdate(slotid, { isbooked: true });
+
+    successResponse(res, "Appointment booked successfully", appointment);
   } catch (error) {
     console.log("error", error);
     errorResponse(res, 500, "internal server error");
