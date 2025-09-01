@@ -12,27 +12,22 @@ const appointmentSchema = new Schema(
     },
     specialization: { type: String },
     date: { type: Date },
-    slotid: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "slotbooking",
-    }, // e.g., "10:00 AM - 10:30 AM"
+    starttime: { type: String, required: true },
+    endtime: { type: String, required: true },
+    slottype: { type: String, enum: ["online", "offline"], required: true },
     status: {
       type: String,
-      enum: ["pending", "completed", "cancelled"],
+      enum: ["pending", "confirmed", "cancelled"],
       default: "pending",
-    },
-    timeslot: {
-      type: String,
-    },
-    slottype: {
-      type: String,
-      enum: ["offline", "online"],
-      default: "",
     },
     paymentStatus: {
       type: String,
       enum: ["unpaid", "paid"],
       default: "unpaid",
+    },
+    price: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true, versionKey: false }
