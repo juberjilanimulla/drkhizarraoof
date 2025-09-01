@@ -20,7 +20,6 @@ async function createappointmentHandler(req, res) {
       doctorid,
       date,
       slotid,
-      endtime,
       timeslot,
       slottype,
     } = req.body;
