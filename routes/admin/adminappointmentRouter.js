@@ -8,6 +8,7 @@ import appointmentmodel from "../../model/appointmentmodel.js";
 const adminappointmentRouter = Router();
 
 adminappointmentRouter.post("/getall", getallappointmentHandler);
+adminappointmentRouter.delete("/delete", deleteappointmentHandler);
 
 export default adminappointmentRouter;
 
@@ -27,7 +28,7 @@ async function getallappointmentHandler(req, res) {
         }
       });
     }
-    
+
     if (filterBy.startDate && filterBy.endDate) {
       query.$and.push({
         date: {
@@ -73,6 +74,22 @@ async function getallappointmentHandler(req, res) {
     const totalPages = Math.ceil(totalCount / limit);
 
     successResponse(res, "Success", { appointment, totalPages });
+  } catch (error) {
+    console.log("error", error);
+    errorResponse(res, 500, "internal server error");
+  }
+}
+
+async function deleteappointmentHandler(req, res) {
+  try {
+    const { appointmentid } = req.body;
+    if (!appointmentid) {
+      return errorResponse(res, 400, "some params are missing");
+    }
+    const appointment = await appointmentmodel.findByIdAndDelete({
+      _id: appointmentid,
+    });
+    return successResponse(res, "Successfully deleted");
   } catch (error) {
     console.log("error", error);
     errorResponse(res, 500, "internal server error");

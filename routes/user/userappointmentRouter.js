@@ -120,3 +120,12 @@ async function getmyappointmentsHandler(req, res) {
     errorResponse(res, 500, "Internal server error");
   }
 }
+
+async function getappointmentsHandler(req,res){
+  try {
+    
+  } catch (error) {
+    console.log("error",error);
+    errorResponse(res,500,"internal server error")
+  }
+}
