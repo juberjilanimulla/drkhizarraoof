@@ -3,9 +3,10 @@ import {
   errorResponse,
   successResponse,
 } from "../../helpers/serverResponse.js";
-import doctormodel from "../../model/doctormodel";
+import doctormodel from "../../model/doctormodel.js";
 
 const userdoctorRouter = Router();
+
 userdoctorRouter.get("/getall", getdoctorHandler);
 export default userdoctorRouter;
 
