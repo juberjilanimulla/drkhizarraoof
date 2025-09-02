@@ -10,6 +10,7 @@ const userappointmentRouter = Router();
 
 userappointmentRouter.post("/create", createappointmentHandler);
 userappointmentRouter.get("/:patientmobile", getmyappointmentsHandler);
+userappointmentRouter.get("/", getallappointmentHandler);
 
 export default userappointmentRouter;
 
@@ -81,19 +82,6 @@ async function createappointmentHandler(req, res) {
       paymentStatus: "unpaid",
     });
 
-    // Auto-cancel after 7 minutes if still unpaid
-    setTimeout(async () => {
-      const appt = await appointmentmodel.findById(appointment._id);
-      if (appt && appt.paymentStatus === "unpaid") {
-        await appointmentmodel.findByIdAndUpdate(appointment._id, {
-          status: "cancelled",
-        });
-        console.log(
-          `Appointment ${appointment._id} auto-cancelled due to no payment`
-        );
-      }
-    }, 7 * 60 * 1000);
-
     successResponse(res, "Appointment created", appointment);
   } catch (error) {
     console.log("error", error);
@@ -121,11 +109,26 @@ async function getmyappointmentsHandler(req, res) {
   }
 }
 
-async function getappointmentsHandler(req,res){
+async function getallappointmentHandler(req, res) {
   try {
-    
+    const { doctorid, date } = req.query;
+
+    if (!doctorid || !date) {
+      return errorResponse(res, 400, "doctorid and date are required");
+    }
+
+    // Find all appointments for doctor on that date
+    const appointments = await appointmentmodel.find({
+      doctorid,
+      date: new Date(date),
+      status: { $in: ["pending", "confirmed", "cancelled"] }, // only active bookings
+    });
+
+    successResponse(res, "Appointments fetched successfully", {
+      appointments,
+    });
   } catch (error) {
-    console.log("error",error);
-    errorResponse(res,500,"internal server error")
+    console.log("error", error);
+    errorResponse(res, 500, "internal server error");
   }
 }
