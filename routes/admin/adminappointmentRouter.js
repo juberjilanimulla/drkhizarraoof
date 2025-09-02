@@ -64,7 +64,6 @@ async function getallappointmentHandler(req, res) {
     const appointment = await appointmentmodel
       .find(query)
       .populate("doctorid", "name specialization") // doctor info
-      .populate("slotid", "starttime endtime slottype") // slot info
       .sort(sortBy)
       .skip(skip)
       .limit(limit);
