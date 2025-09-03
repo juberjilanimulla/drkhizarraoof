@@ -8,6 +8,7 @@ import {
 const adminpaymentRouter = Router();
 
 adminpaymentRouter.post("/getall", getallpaymentHandler);
+adminpaymentRouter.delete("/delete", deletepaymentHandler);
 
 export default adminpaymentRouter;
 
@@ -69,6 +70,23 @@ async function getallpaymentHandler(req, res) {
       totalCount,
       totalPages,
     });
+  } catch (error) {
+    console.log("error", error);
+    errorResponse(res, 500, "internal server error");
+  }
+}
+
+async function deletepaymentHandler(req, res) {
+  try {
+    const { paymentid } = req.body;
+    if (!paymentid) {
+      return errorResponse(res, 400, "some params are missing");
+    }
+    const payment = await paymentmodel.findByIdAndDelete({ _id: paymentid });
+    if (!payment) {
+      return errorResponse(res, 404, "payment id not found ");
+    }
+    successResponse(res, "successfully deletd");
   } catch (error) {
     console.log("error", error);
     errorResponse(res, 500, "internal server error");
