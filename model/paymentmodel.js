@@ -11,21 +11,27 @@ const paymentSchema = new Schema(
       ref: "doctor",
     },
     amount: { type: Number },
-    paymentStatus: {
+    paymentstatus: {
       type: String,
       enum: ["created", "pending", "paid", "failed", "refunded"],
       default: "created",
     },
     // Razorpay / Stripe fields
-    orderId: String,
-    paymentId: String,
+    orderid: String,
+    paymentid: String,
     signature: String,
     method: String, // card, UPI, netbanking, wallet, etc.
-    errorMessage: String,
+    errormessage: String,
     paidAt: Date,
   },
   { timestamps: true, versionKey: false }
 );
+
+function currentLocalTimePlusOffset() {
+  const now = new Date();
+  const offset = 5.5 * 60 * 60 * 1000;
+  return new Date(now.getTime() + offset);
+}
 
 paymentSchema.pre("save", function (next) {
   const currentTime = currentLocalTimePlusOffset();
