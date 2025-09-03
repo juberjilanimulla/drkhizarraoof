@@ -55,10 +55,9 @@ async function createappointmentHandler(req, res) {
 
     // Check if appointment already exists for this slot
     const alreadyBooked = await appointmentmodel.findOne({
-      doctorid,
-      date,
-      slotid,
-      starttime,
+      date: new Date(date),
+      starttime: starttime.trim(),
+      endtime: endtime.trim(),
       status: { $in: ["pending", "confirmed"] },
     });
 
@@ -74,8 +73,8 @@ async function createappointmentHandler(req, res) {
       doctorid,
       date,
       slotid,
-      starttime,
-      endtime,
+      starttime: starttime.trim(),
+      endtime: endtime.trim(),
       slottype,
       price: price || 0,
       status: "pending",
