@@ -22,4 +22,5 @@ userRouter.use("/appointment", userappointmentRouter);
 userRouter.use("/slotbooking", userslotbookingRouter);
 userRouter.use("/payment", userpaymentRouter);
 userRouter.use("/doctor", userdoctorRouter);
+
 export default userRouter;

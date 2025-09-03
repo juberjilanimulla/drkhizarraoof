@@ -1,4 +1,4 @@
-import { Router } from "express";
+import Router from "express";
 import crypto from "crypto";
 import Razorpay from "razorpay";
 import {
@@ -67,7 +67,7 @@ async function verifypaymentHandler(req, res) {
   try {
     const { appointmentid, orderid, paymentid, signature } = req.body;
 
-    if (!appointmentid || !orderid || !paymentid ) {
+    if (!appointmentid || !orderid || !paymentid) {
       return errorResponse(res, 400, "Missing payment verification params");
     }
 
