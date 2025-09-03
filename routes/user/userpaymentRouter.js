@@ -72,14 +72,14 @@ async function verifypaymentHandler(req, res) {
     }
 
     // Verify signature
-    // const generatedSignature = crypto
-    //   .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-    //   .update(orderid + "|" + paymentid)
-    //   .digest("hex");
+    const generatedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(orderid + "|" + paymentid)
+      .digest("hex");
 
-    // if (generatedSignature !== signature) {
-    //   return errorResponse(res, 400, "Invalid payment signature");
-    // }
+    if (generatedSignature !== signature) {
+      return errorResponse(res, 400, "Invalid payment signature");
+    }
 
     // Update appointment
     await appointmentmodel.findByIdAndUpdate(appointmentid, {
@@ -92,7 +92,7 @@ async function verifypaymentHandler(req, res) {
       { orderid },
       {
         paymentid,
-        // signature,
+        signature,
         paymentstatus: "paid",
         paidAt: new Date(),
       },
