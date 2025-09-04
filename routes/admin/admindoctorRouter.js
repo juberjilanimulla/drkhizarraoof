@@ -106,12 +106,7 @@ async function updatedoctorHandler(req, res) {
     }
 
     const options = { new: true };
-    if (
-      !updatedData.name ||
-      !updatedData.email ||
-      !updatedData.mobile ||
-      !updatedData.specialization
-    ) {
+    if (!updatedData.name || !updatedData.email || !updatedData.mobile) {
       errorResponse(res, 404, "Some params are missing");
       return;
     }
