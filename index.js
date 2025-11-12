@@ -36,8 +36,9 @@ app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 app.use(
   cors({
     origin: [
-      "https://drkhizarraoof.com", // ✅ main website (frontend)
+      "https://drkhizarraoof.com", //  main website (frontend)
       "https://www.drkhizarraoof.com", // optional www version
+      "https://api.drkhizarraoof.com",
       "http://localhost:3000", // for local testing
     ],
     credentials: true,
