@@ -8,7 +8,7 @@ import uservideoRouter from "./uservideoRouter.js";
 import userappointmentRouter from "./userappointmentRouter.js";
 import userslotbookingRouter from "./userslotbookingRouter.js";
 import userdoctorRouter from "./userdoctorRouter.js";
-import userpaymentRouter from "./userpaymentRouter.js";
+import userpaymentRouter from "./userpaymentRouter";
 
 const userRouter = Router();
 
