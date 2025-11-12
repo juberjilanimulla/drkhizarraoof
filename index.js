@@ -32,16 +32,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));
-app.use(
-  cors({
-    origin: [
-      "https://drkhizarraoof.com", //  main website (frontend)
-      "https://www.drkhizarraoof.com", // optional www version
-      "https://api.drkhizarraoof.com",
-      "http://localhost:3000", // for local testing
-    ],
-  })
-);
+app.options("*", cors());
 
 //routes
 app.use("/api/auth", authRouter);
