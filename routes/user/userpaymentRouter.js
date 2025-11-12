@@ -8,7 +8,7 @@ import {
 import appointmentmodel from "../../model/appointmentmodel.js";
 import paymentmodel from "../../model/paymentmodel.js";
 
-const userpaymentRouter = Router();
+const userpaymentsRouter = Router();
 
 // Razorpay instance
 const razorpay = new Razorpay({
@@ -16,11 +16,11 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-userpaymentRouter.post("/order", createorderHandler);
+userpaymentsRouter.post("/order", createorderHandler);
 
-userpaymentRouter.post("/verify", verifypaymentHandler);
+userpaymentsRouter.post("/verify", verifypaymentHandler);
 
-export default userpaymentRouter;
+export default userpaymentsRouter;
 
 async function createorderHandler(req, res) {
   try {
