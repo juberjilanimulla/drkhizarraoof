@@ -41,9 +41,6 @@ app.use(
       "https://api.drkhizarraoof.com",
       "http://localhost:3000", // for local testing
     ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
