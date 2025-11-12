@@ -36,11 +36,13 @@ app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 app.use(
   cors({
     origin: [
-      "https://api.drkhizarraoof.com",
-      "https://www.drkhizarraoof.com",
-      "http://localhost:4000",
+      "https://drkhizarraoof.com", // ✅ main website (frontend)
+      "https://www.drkhizarraoof.com", // optional www version
+      "http://localhost:3000", // for local testing
     ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
