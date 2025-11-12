@@ -33,32 +33,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));
-app.use(
-  cors({
-    origin: [
-      "https://raoofsurocare.vercel.app",
-      "https://drkhizarraoof.com",
-      "https://drkhizarraoof.vercel.app",
-      "http://localhost:3000",
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://localhost:5175",
-    ],
-    credentials: true,
-  })
-);
-app.use((err, req, res, next) => {
-  if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
-    return res.status(400).json({ error: "Invalid JSON input" });
-  }
-  next(err); // Pass to the next middleware if not a JSON error
-});
-
-// Default error handler
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ error: "Internal server error" });
-});
+app.use(cors());
 
 //routes
 app.use("/api/auth", authRouter);
