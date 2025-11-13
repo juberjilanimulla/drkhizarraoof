@@ -16,11 +16,6 @@ morgan.token("remote-addr", function (req) {
   return req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 });
 
-morgan.token("url", (req) => {
-  const url = new URL(req.url, `http://${req.headers.host}`);
-  return req.originalUrl;
-});
-
 app.use(
   morgan(
     ":remote-addr :method :url :status :res[content-length] - :response-time ms"
