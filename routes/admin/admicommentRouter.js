@@ -5,13 +5,13 @@ import {
 } from "../../helpers/serverResponse.js";
 import commentmodel from "../../model/commentmodel.js";
 
-const admincommentsRouter = Router();
+const admincommentRouter = Router();
 
-admincommentsRouter.post("/getall", getcommentHandler);
-admincommentsRouter.post("/published/:id", publishedapprovalHandler);
-admincommentsRouter.delete("/delete", deletecommitHandler);
+admincommentRouter.post("/getall", getcommentHandler);
+admincommentRouter.post("/published/:id", publishedapprovalHandler);
+admincommentRouter.delete("/delete", deletecommitHandler);
 
-export default admincommentsRouter;
+export default admincommentRouter;
 
 async function getcommentHandler(req, res) {
   try {

@@ -7,8 +7,8 @@ import adminvideoRouter from "./adminvideoRouter.js";
 import adminslotbookingRouter from "./adminslotbookingRouter.js";
 import adminappointmentRouter from "./adminappointmentRouter.js";
 import adminpaymentRouter from "./adminpaymentRouter.js";
-import admincommentsRouter from "./admicommentRouter.js";
 import adminblogRouter from "./adminblogRouter.js";
+import admincommentRouter from "./admicommentRouter.js";
 
 const adminRouter = Router();
 
@@ -21,5 +21,5 @@ adminRouter.use("/video", adminvideoRouter);
 adminRouter.use("/slotbooking", adminslotbookingRouter);
 adminRouter.use("/appointment", adminappointmentRouter);
 adminRouter.use("/payment", adminpaymentRouter);
-adminRouter.use("/comment", admincommentsRouter);
+adminRouter.use("/comment", admincommentRouter);
 export default adminRouter;
