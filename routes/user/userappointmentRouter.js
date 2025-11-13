@@ -9,8 +9,12 @@ import slotbookingmodel from "../../model/slotbookingmodel.js";
 const userappointmentRouter = Router();
 
 userappointmentRouter.post("/create", createappointmentHandler);
-userappointmentRouter.get("/:patientmobile", getmyappointmentsHandler);
+
+// STATIC ROUTE FIRST — FIXES THE ERROR
 userappointmentRouter.get("/", getallappointmentHandler);
+
+// DYNAMIC ROUTE AFTER
+userappointmentRouter.get("/:patientmobile", getmyappointmentsHandler);
 
 export default userappointmentRouter;
 
