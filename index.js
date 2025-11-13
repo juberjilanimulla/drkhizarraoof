@@ -49,7 +49,7 @@ app.use(
   })
 );
 
-app.options("*", cors());
+// app.options("*", cors());
 
 // ROUTES
 app.use("/api/auth", authRouter);
