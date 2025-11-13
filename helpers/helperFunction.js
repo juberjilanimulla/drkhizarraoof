@@ -4,6 +4,9 @@ import { v4 as uuidv4 } from "uuid";
 import bcrypt, { compare } from "bcrypt";
 import crypto from "crypto";
 import usermodel from "../model/usermodel.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const secrectKey = crypto.randomBytes(48).toString("hex");
 
