@@ -34,12 +34,13 @@ async function getcommentHandler(req, res) {
     const limit = 10;
     const skip = pageno * limit;
 
-    let query = { approved: true };
+    // Proper query initialization
+    let query = { approved: true, $and: [] };
 
     // Apply filters
-    if (filterBy) {
+    if (filterBy && Object.keys(filterBy).length > 0) {
       Object.keys(filterBy).forEach((key) => {
-        if (filterBy[key] !== undefined) {
+        if (filterBy[key] !== undefined && filterBy[key] !== "") {
           query.$and.push({ [key]: filterBy[key] });
         }
       });
@@ -55,6 +56,9 @@ async function getcommentHandler(req, res) {
       ];
       query.$and.push({ $or: searchConditions });
     }
+
+    // If $and is empty → remove it
+    if (query.$and.length === 0) delete query.$and;
 
     // Apply sorting
     const sortBy =
@@ -84,7 +88,7 @@ async function getcommentHandler(req, res) {
       { $limit: limit },
     ]);
 
-    // Get total count for pagination
+    // Total pages
     const totalCount = await commentmodel.countDocuments(query);
     const totalPages = Math.ceil(totalCount / limit);
 
@@ -108,5 +112,6 @@ async function deletecommentHandler(req, res) {
     successResponse(res, "success");
   } catch (error) {
     console.log("error", error);
+    errorResponse(res, 500, "internal server error");
   }
 }
