@@ -227,8 +227,8 @@ async function publishedapprovalHandler(req, res) {
       updatedBlog
     );
   } catch (error) {
-    console.error("Error updating blog:", error);
-    return errorResponse(res, 500, "Internal server error");
+    console.log("Error updating blog", error);
+    errorResponse(res, 500, "Internal server error");
   }
 }
 

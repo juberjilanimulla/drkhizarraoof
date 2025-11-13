@@ -90,7 +90,7 @@ async function getcommentHandler(req, res) {
 
     successResponse(res, "Success", { comments, totalPages });
   } catch (error) {
-    console.error("Error fetching comments:", error);
+    console.log("Error fetching comments", error);
     errorResponse(res, 500, "Internal server error");
   }
 }

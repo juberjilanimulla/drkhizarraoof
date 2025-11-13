@@ -82,7 +82,7 @@ adminblogimagesRouter.post("/:id", (req, res) => {
 
       return successResponse(res, "Image uploaded successfully", blog);
     } catch (error) {
-      console.error("Upload failed:", error.message);
+      console.log("Upload failed", error.message);
       if (fs.existsSync(req.file?.path)) fs.unlinkSync(req.file.path);
       return errorResponse(res, 500, "Image upload failed");
     }
