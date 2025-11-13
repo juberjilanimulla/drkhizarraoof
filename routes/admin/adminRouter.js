@@ -8,7 +8,7 @@ import adminslotbookingRouter from "./adminslotbookingRouter.js";
 import adminappointmentRouter from "./adminappointmentRouter.js";
 import adminpaymentRouter from "./adminpaymentRouter.js";
 import adminblogRouter from "./adminblogRouter.js";
-import admincommentRouter from "./admicommentRouter.js";
+import admincommentRouter from "./admincommentRouter.js";
 
 const adminRouter = Router();
 
