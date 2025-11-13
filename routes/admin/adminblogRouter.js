@@ -4,8 +4,8 @@ import {
   successResponse,
 } from "../../helpers/serverResponse.js";
 import blogmodel from "../../model/blogmodel.js";
-import adminblogimagesRouter from "./adminuploadblogimagesRouter.js";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import adminblogimagesRouter from "./adminuploadblogimagesRouter.js";
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -22,7 +22,7 @@ adminblogRouter.post("/create", createblogsHandler);
 adminblogRouter.put("/update", updateblogsHandler);
 adminblogRouter.delete("/delete", deleteblogsHandler);
 adminblogRouter.post("/published", publishedapprovalHandler);
-adminblogRouter.use("/blogimage", adminblogimagesRouter);
+adminblogRouter.use("/imageblog", adminblogimagesRouter);
 adminblogRouter.post("/imagedelete", deleteimageblogHandler);
 adminblogRouter.post("/featured", featuredblogHandler);
 
