@@ -11,7 +11,6 @@ import userRouter from "./routes/user/userRouter.js";
 const app = express();
 const port = config.PORT;
 
-// Morgan logs
 morgan.token("remote-addr", (req) => {
   return req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 });
@@ -22,12 +21,11 @@ app.use(
   )
 );
 
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true }));
+// MIDDLEWARE FIXED
+app.use(express.json({ limit: "20mb" }));
+app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
-// ⭐ Correct CORS config
+// CORS
 const allowedOrigins = [
   "https://drkhizarraoof.com",
   "https://www.drkhizarraoof.com",
@@ -35,20 +33,17 @@ const allowedOrigins = [
   "http://localhost:3000",
 ];
 
-// Global CORS must be here
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      } else {
-        return callback(new Error("CORS not allowed"));
+    origin: (origin, cb) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return cb(null, true);
       }
+      return cb(new Error("CORS not allowed"), false);
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
   })
 );
 
@@ -59,10 +54,14 @@ app.use("/api/auth", authRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/user", userRouter);
 
-// DB Connect
+// DB
 dbConnect()
   .then(() => {
     Admin();
-    app.listen(port, () => console.log(`server listening at ${port}`));
+    app.listen(port, () => {
+      console.log(`server listening at ${port}`);
+    });
   })
-  .catch((error) => console.log("unable to connect to server", error));
+  .catch((err) => {
+    console.log("unable to connected to server", err);
+  });
